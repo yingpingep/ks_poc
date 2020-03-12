@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 
 @Component({
@@ -13,6 +13,22 @@ export class AppComponent {
   constructor(private httpClient: HttpClient) { }
 
   onBtnClick(value: string) {
-    document.location.href = `http://localhost:4201/ready/${value}`;
+    // TODO: post to server-back
+    this.httpClient.post('https://localhost:5004/api/auth', value, {
+      headers: new HttpHeaders({
+        'content-type': 'text/plain'
+      })
+    })
+      .subscribe({
+        next: (resp) => {
+          console.log(`🌻: AppComponent -> onBtnClick -> value`, resp);
+        },
+        error: (err) => {
+          if (err.status === 301) {
+            console.log(`🌻: AppComponent -> onBtnClick -> err.error`, err.error);
+            document.location.href = err.error;
+          }
+        }
+      });
   }
 }

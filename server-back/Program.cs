@@ -20,6 +20,7 @@ namespace server_back
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseUrls("http://localhost:5003", "https://localhost:5004");
                     webBuilder.UseStartup<Startup>();
                 });
     }

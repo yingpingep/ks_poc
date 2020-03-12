@@ -26,6 +26,15 @@ namespace client_back
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddCors(options =>
+            {                
+                options.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,9 +42,10 @@ namespace client_back
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();                
             }
 
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
 
             app.UseRouting();
