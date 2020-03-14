@@ -1,33 +1,41 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import * as HttpStatus from 'http-status-codes';
+import { Meta } from '@angular/platform-browser';
+import { AuthObj } from './models/auth-obj';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'server-front';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(
+    private httpClient: HttpClient,
+    private meta: Meta) { }
+
+  ngOnInit(): void {
+  }
 
   onBtnClick(value: string) {
-    // TODO: post to server-back
-    this.httpClient.post('https://localhost:5004/api/auth', value, {
+    const body: AuthObj = {
+      Account: value,
+      Password: ''
+    };
+
+    this.httpClient.post('https://localhost:5004/api/auth', body, {
       headers: new HttpHeaders({
-        'content-type': 'text/plain'
+        'content-type': 'application/json'
       })
     })
       .subscribe({
-        next: (resp) => {
-          console.log(`🌻: AppComponent -> onBtnClick -> value`, resp);
+        next: (resp: any) => {
+          document.location.href = resp.redirectTo;
         },
         error: (err) => {
-          if (err.status === 301) {
-            console.log(`🌻: AppComponent -> onBtnClick -> err.error`, err.error);
-            document.location.href = err.error;
-          }
+          console.log(`🌻: AppComponent -> onBtnClick -> err.error`, err.error);
         }
       });
   }

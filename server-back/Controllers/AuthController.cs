@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using server_back.Models;
 
 namespace server_back.Controllers
 {
@@ -13,18 +14,10 @@ namespace server_back.Controllers
     public class AuthController : ControllerBase
     {
         [HttpPost]
-        public IActionResult Post()
+        public IActionResult Post([FromBody]AuthObj value)
         {
-            using (var reader = new StreamReader(Request.Body))
-            {
-                var body = Task.Run(reader.ReadToEndAsync).Result;
-                var a = new ContentResult
-                {
-                    StatusCode = 301,
-                    Content = $"http://localhost:4201/#/ready/{body}"
-                };
-                return a;
-            }            
+            var a = new JsonResult(new RedirectObj() { RedirectTo = $"http://localhost:4201/#/ready/{value.Account}" });
+            return a;
         }
     }
 }

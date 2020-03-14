@@ -12,19 +12,14 @@ namespace client_back.Controllers
     public class CAuthController : ControllerBase
     {
         // POST: api/CAuth
-        [HttpPost]
-        public IActionResult Post()
+        [HttpGet]
+        public IActionResult Get()
         {
-            var a = new ContentResult
-            {
-                StatusCode = 301,
-                Content = "http://localhost:4200/#/"
-            };
-            return a;
+            return Redirect("http://localhost:4200/#/");
         }
 
         [HttpGet("{code}")]
-        public IActionResult Get(string code)
+        public IActionResult GetCode(string code)
         {
             return Ok(string.Format("{0}+++", code));
         }
